@@ -35,6 +35,13 @@ class User extends Model {
     return this;
   }
 
+  static associate(models) {
+    // faz o relacionamento entre User e File (o Id da tabela File dentro de User)
+    // .hasOne (o Id de User dentro da tabela File)
+    // .hasMany (o Id de User dentro de vários registros na tabela File)
+    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+  }
+
   checkPassword(password) {
     // vai comparar a senha que ele tá tentando logar com a senha que está no banco
     return bcrypt.compare(password, this.password_hash);
