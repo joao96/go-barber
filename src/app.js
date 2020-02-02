@@ -2,6 +2,7 @@
 // utilizar CLASSES neste arquivo para o BACKEND
 
 import express from 'express';
+import path from 'path';
 import routes from './routes';
 
 import './database';
@@ -25,6 +26,14 @@ class App {
      * prepara a aplicação a receber reqisições no formato JSON
      *  */
     this.server.use(express.json());
+    /**
+     * .static -> servir arquivos estáticos (imagem, css, html)
+     * que podem ser acessados diretamente pelo navegador
+     *  */
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
   }
 
   routes() {

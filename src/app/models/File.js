@@ -8,6 +8,13 @@ class File extends Model {
         // campos (colunas) que o usuario vai preencher
         name: Sequelize.STRING,
         path: Sequelize.STRING,
+        url: {
+          type: Sequelize.VIRTUAL,
+          // como esse campo/valor vai ser formatado
+          get() {
+            return `http://localhost:3333/files/${this.path}`;
+          },
+        },
       },
       {
         sequelize,

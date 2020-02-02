@@ -39,7 +39,8 @@ class User extends Model {
     // faz o relacionamento entre User e File (o Id da tabela File dentro de User)
     // .hasOne (o Id de User dentro da tabela File)
     // .hasMany (o Id de User dentro de vários registros na tabela File)
-    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+    // as: codinome para o relacionamento (para que a referência não se chame File)
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
   checkPassword(password) {
