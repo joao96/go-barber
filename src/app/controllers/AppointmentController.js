@@ -1,13 +1,13 @@
 import * as Yup from 'yup';
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import User from '../models/User';
+import File from '../models/File';
 import Appointment from '../models/Appointment';
 import Notification from '../schemas/Notification';
 
-import Mail from '../../lib/Mail';
-
-import User from '../models/User';
-import File from '../models/File';
+import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
 
 class AppointmentController {
   // vai listar todos os appointments que o usuário logado possui
@@ -169,18 +169,9 @@ class AppointmentController {
 
     await appointment.save();
 
-    await Mail.sendMail({
-      to: `${appointment.provider.name} <${appointment.provider.email}>`,
-      subject: 'Agendamento cancelado',
-      template: 'cancellation',
-      // no context tem que passar todas as variaveis que o template ta esperando (vai usar)
-      context: {
-        provider: appointment.provider.name,
-        user: appointment.user.name,
-        date: format(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h'", {
-          locale: pt,
-        }),
-      },
+    await Queue.add(CancellationMail.key, {
+      // os dados necessários para executar esse job vai pro handle (data)
+      appointment,
     });
 
     return res.json(appointment);
