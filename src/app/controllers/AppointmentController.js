@@ -7,9 +7,14 @@ import File from '../models/File';
 class AppointmentController {
   // vai listar todos os appointments que o usuário logado possui
   async index(req, res) {
+    // page = 1, caso n seja fornecido, está na primeira pagina
+    const { page = 1 } = req.query;
+
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
+      limit: 20, // vai listar 20 registros por vez
+      offset: (page - 1) * 20, // quantos registros vai pular
       attributes: ['id', 'date'], // o id do appointment e a data dele
       include: [
         {
