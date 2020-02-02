@@ -63,6 +63,12 @@ class AppointmentController {
         .json({ error: 'You can only create appoitments with providers.' });
     }
 
+    if (provider_id === req.userId) {
+      return res
+        .status(401)
+        .json({ error: 'You cannot create appointments with yourself.' });
+    }
+
     /**
      * parseISO: transforma o date em um objeto DATE do javascript
      * startOfHour: vai ignorar os minutos e segundos da hora setada e só contar a Hora
