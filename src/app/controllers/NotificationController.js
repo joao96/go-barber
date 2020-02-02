@@ -27,6 +27,19 @@ class NotificationController {
 
     return res.json(notifications);
   }
+
+  async update(req, res) {
+    const notification = await Notification.findByIdAndUpdate(
+      // o valor para buscar no schema
+      req.params.id,
+      // o campo que vai mudar
+      { read: true },
+      // salva no banco, mas sem o new ele n retorna o novo registro ATUALIZADO
+      { new: true }
+    );
+
+    return res.json(notification);
+  }
 }
 
 export default new NotificationController();

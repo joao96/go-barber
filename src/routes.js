@@ -38,6 +38,8 @@ routes.post('/appointments', AppointmentController.store);
 routes.get('/schedules', ScheduleController.index);
 
 routes.get('/notifications', NotificationController.index);
+routes.put('/notifications/:id', NotificationController.update);
+
 /**
  * .single -> upload de um arquivo por vez e nao varios
  * 'file' -> nome do campo dentro da requisição
