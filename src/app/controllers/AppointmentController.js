@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { startOfHour, parseISO, isBefore } from 'date-fns';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 
@@ -28,10 +29,42 @@ class AppointmentController {
         .json({ error: 'You can only create appoitments with providers.' });
     }
 
+    /**
+     * parseISO: transforma o date em um objeto DATE do javascript
+     * startOfHour: vai ignorar os minutos e segundos da hora setada e só contar a Hora
+     * (para sempre ter apenas 1 agendamento por hora)
+     */
+    const hourStart = startOfHour(parseISO(date));
+
+    /**
+     * checa para datas preenchidas pelo usuário que já passaram
+     */
+    if (isBefore(hourStart, new Date())) {
+      return res.status(400).json({ error: 'Past dates are not permited.' });
+    }
+
+    /**
+     * checa se essa data está disponível
+     */
+    const checkAvailability = await Appointment.findOne({
+      where: {
+        provider_id,
+        canceled_at: null,
+        date: hourStart,
+      },
+    });
+
+    if (checkAvailability) {
+      return res
+        .status(400)
+        .json({ error: 'Appointment date is not available.' });
+    }
+
     const appointment = await Appointment.create({
       user_id: req.userId, // vem lá do middleware de autenticação quando o user loga na app
       provider_id,
-      date,
+      // hourStart -> só pega a Hora fornecidade e não os minutos ou segundos
+      date: hourStart,
     });
 
     return res.json(appointment);
