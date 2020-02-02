@@ -20,7 +20,7 @@ class AppointmentController {
       order: ['date'],
       limit: 20, // vai listar 20 registros por vez
       offset: (page - 1) * 20, // quantos registros vai pular
-      attributes: ['id', 'date'], // o id do appointment e a data dele
+      attributes: ['id', 'date', 'past', 'cancelable'], // o id do appointment e a data dele
       include: [
         {
           model: User,
