@@ -37,6 +37,7 @@ class User extends Model {
 
   static associate(models) {
     // faz o relacionamento entre User e File (o Id da tabela File dentro de User)
+    // ou seja, vai inserir esse relacionamento na tabela sem ter que descriminar no super.init
     // .hasOne (o Id de User dentro da tabela File)
     // .hasMany (o Id de User dentro de vários registros na tabela File)
     // as: codinome para o relacionamento (para que a referência não se chame File)
